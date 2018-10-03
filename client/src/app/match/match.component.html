@@ -1,0 +1,261 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0" (submit)="findMatch()">
+      <input class="form-control mr-sm-2" type="text" placeholder="Match ID" name="value" [(ngModel)]="number.value" #author = "ngModel">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Find Match</button>
+    </form>
+  </div>
+</nav>
+
+  <!-- <form (submit)="findMatch()">
+    Match ID: <input type="text" name="value" [(ngModel)]="number.value" #author = "ngModel">
+  </form> -->
+
+  <div *ngIf="searches < 1">
+      <div style="text-align:center">
+      <h1>
+          Please enter a match ID to get started
+      </h1>
+      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+      
+    </div>
+  </div>
+
+  
+
+  <div *ngIf="searches > 0">
+    <h1> Match number {{match_id}} </h1>
+    <h3> {{this.match_length}} </h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Player</th>
+          <th scope="col">Hero</th>
+          <th scope="col">Taunts</th>
+          <th scope="col">Other Stats</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-active" *ngFor="let x of this.players">
+          <th scope="row" *ngIf="x.personaname">
+            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
+               {{x.personaname}} 
+            </a>
+          </th>
+          <th scope="row" *ngIf="!x.personaname">
+            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
+               Anonymous 
+            </a>
+          </th>
+          <td>{{x.hero}}</td>
+          <td *ngIf="x.actions[22]" color="red">{{x.actions[22]}}</td>
+          <td *ngIf="!x.actions[22]">None</td>
+          <td>
+            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
+            STATS
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      Modals for player stats
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <div *ngFor="let x of this.players">
+      <div class="modal" id="playerStats_{{x.player_slot}}">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" *ngIf="x.personaname">{{x.personaname}}'s stats</h5>
+              <h5 class="modal-title" *ngIf="!x.personaname">Anonomous' stats</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active show" data-toggle="tab" href="#actions">Actions</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+              </ul>
+                <div id="myTabContent" class="tab-content">
+                  <div class="tab-pane fade active show" id="actions">
+
+                    <table class="table table-striped">
+                      <tr *ngIf="x.actions[1]">
+                        <td>Move to Position</td>
+                        <td>{{x.actions[1]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[2]">
+                        <td>Move to Target</td>
+                        <td>{{x.actions[2]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[3]">
+                        <td>Attack Move</td>
+                        <td>{{x.actions[3]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[4]">
+                        <td>Attack Target</td>
+                        <td>{{x.actions[4]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[5]">
+                        <td>Cast Position</td>
+                        <td>{{x.actions[5]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[6]">
+                        <td>Cast Target</td>
+                        <td>{{x.actions[6]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[7]">
+                        <td>Cast Target Tree</td>
+                        <td>{{x.actions[7]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[8]">
+                        <td>Cast No Target</td>
+                        <td>{{x.actions[8]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[9]">
+                        <td>Cast Toggle</td>
+                        <td>{{x.actions[9]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[10]">
+                        <td>Hold Position</td>
+                        <td>{{x.actions[10]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[11]">
+                        <td>Train Ability</td>
+                        <td>{{x.actions[11]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[12]">
+                        <td>Drop Item</td>
+                        <td>{{x.actions[12]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[13]">
+                        <td>Give Item</td>
+                        <td>{{x.actions[13]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[14]">
+                        <td>Pickup Item</td>
+                        <td>{{x.actions[14]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[15]">
+                        <td>Pickup Rune</td>
+                        <td>{{x.actions[15]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[16]">
+                        <td>Purchase Item</td>
+                        <td>{{x.actions[16]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[17]">
+                        <td>Sell Item</td>
+                        <td>{{x.actions[17]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[18]">
+                        <td>Disassemble Item</td>
+                        <td>{{x.actions[18]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[19]">
+                        <td>Move Item</td>
+                        <td>{{x.actions[19]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[20]">
+                        <td>Cast Auto Toggle</td>
+                        <td>{{x.actions[20]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[21]">
+                        <td>Stop</td>
+                        <td>{{x.actions[21]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[22]">
+                        <td>Taunt</td>
+                        <td>{{x.actions[22]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[23]">
+                        <td>Buyback</td>
+                        <td>{{x.actions[23]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[24]">
+                        <td>Glyph</td>
+                        <td>{{x.actions[24]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[25]">
+                        <td>Eject Item From Stash</td>
+                        <td>{{x.actions[25]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[26]">
+                        <td>Cast Rune</td>
+                        <td>{{x.actions[26]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[27]">
+                        <td>Ping Ability</td>
+                        <td>{{x.actions[27]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[28]">
+                        <td>Move to Direction</td>
+                        <td>{{x.actions[28]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[29]">
+                        <td>Order Patrol</td>
+                        <td>{{x.actions[29]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[30]">
+                        <td>Vector Target Position</td>
+                        <td>{{x.actions[30]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[31]">
+                        <td>Radar</td>
+                        <td>{{x.actions[31]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[32]">
+                        <td>Set Item Lock</td>
+                        <td>{{x.actions[32]}}</td>
+                      </tr>
+                      <tr *ngIf="x.actions[33]">
+                        <td>Continue</td>
+                        <td>{{x.actions[33]}}</td>
+                      </tr>
+                    </table>
+
+                  </div>
+                  <div class="tab-pane fade" id="profile">
+                    <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
+                  </div>
+                  
+                </div>
+             
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
