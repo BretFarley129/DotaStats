@@ -1,85 +1,124 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div *ngIf="loaded">
+  <h1> Match number {{match_id}} </h1>
+  <h4><strong>Game Mode:</strong>  {{game_mode.local}}</h4>
+  <h3> {{this.match_length}} </h3>
+  <h3 *ngIf="!match_info.objectives" class="text-danger"> Not all information is available for this match </h3>
+  <hr>
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0" (submit)="findMatch()">
-      <input class="form-control mr-sm-2" type="text" placeholder="Match ID" name="value" [(ngModel)]="number.value" #author = "ngModel">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Find Match</button>
-    </form>
-  </div>
-</nav>
-
-  <!-- <form (submit)="findMatch()">
-    Match ID: <input type="text" name="value" [(ngModel)]="number.value" #author = "ngModel">
-  </form> -->
-
-  <div *ngIf="searches < 1">
-      <div style="text-align:center">
-      <h1>
-          Please enter a match ID to get started
-      </h1>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-      
-    </div>
-  </div>
-
-  
-
-  <div *ngIf="searches > 0">
-    <h1> Match number {{match_id}} </h1>
-    <h3> {{this.match_length}} </h3>
-    <table class="table table-striped">
+  <div class="jumbotron bg-success m-5">
+    <h1> Radiant <span *ngIf="match_info.radiant_win"> - Winner </span> </h1>
+    <table class="table table-dark">
       <thead>
-        <tr>
-          <th scope="col">Player</th>
-          <th scope="col">Hero</th>
-          <th scope="col">Taunts</th>
-          <th scope="col">Other Stats</th>
-        </tr>
+        <th scope="col">Hero</th>
+        <th scope="col">Player</th>
+        <th scope="col" *ngIf="game_mode.id == 18">Abilities</th>
+        <th scope="col">Taunts</th>
+        <th scope="col">Other Stats</th>
       </thead>
       <tbody>
-        <tr class="table-active" *ngFor="let x of this.players">
-          <th scope="row" *ngIf="x.personaname">
-            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
-               {{x.personaname}} 
-            </a>
+        <tr *ngFor="let x of this.radiant">
+
+          <th scope="row">
+            <div *ngIf="x.hero_info">
+              <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{x.hero_info.name}}_sb.png">
+              {{x.hero_info.localized_name}}
+            </div>
           </th>
-          <th scope="row" *ngIf="!x.personaname">
-            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
-               Anonymous 
+
+          <td *ngIf="x.personaname">
+            <a [routerLink]="['/users', x.account_id]" class="text-danger">
+              {{x.personaname}} 
             </a>
-          </th>
-          <td>{{x.hero}}</td>
-          <td *ngIf="x.actions[22]" color="red">{{x.actions[22]}}</td>
-          <td *ngIf="!x.actions[22]">None</td>
+          </td>
+          <td *ngIf="!x.personaname">
+            <p>
+              Anonymous 
+            </p>
+          </td>
+
+          <td *ngIf="game_mode.id == 18">
+            <ul class="list-inline">
+              <li *ngFor="let y of x.abilities" class="list-inline-item">
+                <img src="http://cdn.dota2.com/apps/dota2/images/abilities/{{y}}_hp2.png" style="height: 30px">
+              </li>
+            </ul>
+          </td>
+
+          <td *ngIf="match_info.objectives" color="red">
+              <span *ngIf="x.actions[22]">{{x.actions[22]}}</span>
+              <span *ngIf="!x.actions[22]">None</span>
+          </td>
+          <td *ngIf="!match_info.objectives"> N/A </td>
+
           <td>
-            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}">
+            <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}" onclick="return false;">
             STATS
             </a>
           </td>
         </tr>
       </tbody>
     </table>
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      Modals for player stats
-      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  </div>
+  
+  <div class="jumbotron bg-danger m-5">
+    <h1> Dire <span *ngIf="!match_info.radiant_win"> - Winner </span> </h1>
+      <table class="table table-dark">
+        <thead>
+          <th scope="col">Hero</th>
+          <th scope="col">Player</th>
+          <th scope="col" *ngIf="game_mode.id == 18">Abilities</th>
+          <th scope="col">Taunts</th>
+          <th scope="col">Other Stats</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let x of this.dire">
+
+            <th scope="row">
+              <div *ngIf="x.hero_info">
+                <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{x.hero_info.name}}_sb.png">
+                {{x.hero_info.localized_name}}
+              </div>
+            </th>
+
+            <th *ngIf="x.personaname">
+              <a [routerLink]="['/users', x.account_id]" class="text-danger">
+                {{x.personaname}} 
+              </a>
+            </th>
+            <th *ngIf="!x.personaname">
+              <p>
+                Anonymous 
+              </p>
+            </th>
+
+            <td *ngIf="game_mode.id == 18">
+              <ul class="list-inline">
+                <li *ngFor="let y of x.abilities" class="list-inline-item">
+                  <img src="http://cdn.dota2.com/apps/dota2/images/abilities/{{y}}_hp2.png" style="height: 30px">
+                </li>
+              </ul>
+            </td>
+
+            <td *ngIf="match_info.objectives" color="red">
+              <span *ngIf="x.actions[22]">{{x.actions[22]}}</span>
+              <span *ngIf="!x.actions[22]">None</span>
+            </td>
+            <td *ngIf="!match_info.objectives"> N/A </td>
+
+            <td>
+              <a data-toggle="modal" data-target="#playerStats_{{x.player_slot}}" href="#playerStats_{{x.player_slot}}" onclick="return false;">
+              STATS
+              </a>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Modals for player stats
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <div *ngIf="match_info.objectives">
     <div *ngFor="let x of this.players">
       <div class="modal" id="playerStats_{{x.player_slot}}">
         <div class="modal-dialog" role="document">
@@ -247,7 +286,7 @@
                   </div>
                   
                 </div>
-             
+            
 
             </div>
             <div class="modal-footer">
@@ -259,3 +298,4 @@
       </div>
     </div>
   </div>
+</div>

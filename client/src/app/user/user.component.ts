@@ -1,28 +1,28 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatchService } from './../match.service'; 
-import { InfoService } from './../info.service'; 
-import { Router, ActivatedRoute } from '@angular/router';
-
+import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
-  selector: 'app-match',
-  templateUrl: './match.component.html',
-  styleUrls: ['./match.component.css']
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css']
 })
-export class MatchComponent implements OnInit {
-  constructor(private _matchService: MatchService, private _infoService: InfoService, private _route: ActivatedRoute) { 
-    
-  }
+export class UserComponent implements OnInit {
 
-  loaded = false;
-  match_id;
-  match_length;
-  match_info ={radiant_win: null, players: null, duration: null, game_mode: ''};
-  players = [];
-  radiant = [];
-  dire = [];
-  played_heroes = [];
-  game_mode;
+  constructor(private _matchService: MatchService, private _route: ActivatedRoute) { }
+
+  player_id;
+  player;
+  profile;
+  matches;
+  record = {win: 0, lose: 0, percent: ''};
+  current_page = 1;
+  page = {
+    page_length : 100
+  };
+  page_length = 100;
+  num_pages;
+  page_list = [];
   heroes = {
     1: {id: 1, name: "antimage", localized_name: "Anti-Mage"},
     2: {id: 2, name: "axe", localized_name: "Axe"},
@@ -278,91 +278,93 @@ export class MatchComponent implements OnInit {
       "name": "game_mode_mutation"
     }
   };
+  
 
   ngOnInit() {
     this._route.paramMap.subscribe( params => {
-      console.log({location: 'match component', match_id: params.get('id')});
-      this.match_id = params.get('id');
-      this.findMatch();
+      console.log({location: 'user component', user_id: params.get('id')});
+      this.player_id = params.get('id');
+      this.findPlayer();
+      this.playerMatches();
+      this.winLoss();
     })
-    
   }
 
-  // Retrieve data from API, put into values
-  findMatch(){
-    // event.preventDefault();
-    this._matchService.getMatchData(this.match_id).subscribe(
+  findPlayer(){
+    this._matchService.getPlayerData(this.player_id).subscribe(
       (response) => {
-        this.match_info = response.json();
-        console.log({match_deets: this.match_info});
-        this.players = this.match_info.players;
-        this.game_mode = this.game_modes[this.match_info.game_mode];
+        this.player = response.json();
+        this.profile = this.player.profile;
+        console.log({info: 'profile', data: this.profile})
+        console.log({info: 'player', data: this.player})
 
-        //retreive hero information
-        let player_heroes = [];
-        for (var i = 0; i < this.players.length; i ++){
-          player_heroes.push(this.players[i].hero_id)
-        }
-        this._infoService.heroInfo(player_heroes).subscribe(
-          (data)=>{
-            console.log(data.json());
-            let heroes_info = data.json();
-            for (let i = 0; i < this.players.length; i++){
-              this.players[i].hero_info = heroes_info[i]
-            };
-          },
-          (err)=>{
-            console.log('error occurred while fetching hero info')
-            console.log(err)
-          }
-        )
-
-        if (this.game_mode.id == 18) { //Ability draft check
-          let ability_log = []; //for storing all abilities in the game, in order of players
-          // Add abilities
-          for (let i = 0; i < this.players.length; i++){ 
-            ability_log.push(this.players[i].ability_upgrades_arr)
-          }
-          console.log(ability_log);
-          // Request ability names from backend
-          this._infoService.abilityNames(ability_log).subscribe(
-            (data)=>{
-              console.log('retrieved ability names')
-              console.log(data.json())
-              ability_log = data.json();
-              for ( let i = 0; i < ability_log.length; i ++){
-                this.players[i].abilities = ability_log[i];
-              }
-            },
-            (err)=>{
-              console.log('something went wrong');
-              console.log(err)
-            }
-          ) //End subscription
-        } //End Ability draft check
-
-        //Break up players into teams
-        this.radiant = this.players.slice(0, 5);
-        this.dire = this.players.slice(5);
-        
-        console.log({radiant: this.radiant});
-        console.log({dire: this.dire});
-        console.log(this.game_mode)
-        // SET TIME FOR MATCH
-        let minutes = Math.floor(this.match_info.duration / 60);
-        let seconds = this.match_info.duration % 60;
-        if (seconds < 10){
-          this.match_length = `${minutes}:0${seconds}`
-        }
-        else{
-          this.match_length = `${minutes}:${seconds}`
-        }
-        this.loaded = true;
-      }, //End subscription response
+      },
       (err) => {
         console.log('error occured')
         console.log(err);
-      } //End subscription err
-    ); // End SUBSCRIPTION
-  } // END FUNCTION
+      }
+    );
+  }
+
+  playerMatches(){
+    this._matchService.getPlayerMatches(this.player_id).subscribe(
+      (response) => {
+        this.matches = response.json();
+        console.log({info: 'matches', data: this.matches})
+        this.setTimes();
+        this.setPages();
+
+      },
+      (err) => {
+        console.log('error occured')
+        console.log(err);
+      }
+    );
+  }
+
+  winLoss(){
+    this._matchService.getWinLoss(this.player_id).subscribe(
+      (response) => {
+        this.record = response.json();
+        let perc = ((this.record.win / (this.record.win + this.record.lose))*100).toFixed(2);
+        // perc = (perc*100).toFixed(2)
+        this.record.percent = perc;
+        console.log({info: 'w/l', data: this.record});
+      },
+      (err) => {
+        console.log('error occured')
+        console.log(err); 
+      }
+    );
+  }
+
+  setTimes(){
+    for (var i = 0; i < this.matches.length; i++){
+      let minutes = Math.floor(this.matches[i].duration / 60);
+      let seconds = this.matches[i].duration % 60;
+      if (seconds < 10){
+        this.matches[i].match_length = `${minutes}:0${seconds}`
+      }
+      else{
+        this.matches[i].match_length = `${minutes}:${seconds}`
+      }
+    }
+  }
+  setPages(){
+    //this can be reformatted into 2 functions that could lessen user side computing
+    console.log('test');
+    this.page_list = [];
+    this.num_pages = Math.ceil(this.matches.length / this.page.page_length);
+    for (let i = 1; i <= this.num_pages; i++){
+      this.page_list.push(i);
+    }
+    if( this.current_page > this.page_list.length){
+      this.current_page = this.page_list.length;
+    }
+  }
+
+  selectPage(page_number){
+    this.current_page = page_number;
+  }
+  
 }

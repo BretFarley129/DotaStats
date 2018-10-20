@@ -1,0 +1,56 @@
+<br>
+<div class="jumbotron bg-danger m-5" *ngIf="profile">
+  <div style="display:inline-block; width: 20%; height: 100%">
+    <img src="{{profile.avatarfull}}"/>
+  </div>
+  <div style="display: inline-block; width: 75%; height: 100%; vertical-align: top">
+    <h1>{{profile.personaname}} </h1>
+    <h3>
+      <span class="text-success"> {{record.win}} </span> - <span class="text-warning"> {{record.lose}} </span>
+      &emsp; {{record.percent}}%
+    </h3>
+    <h3> Estimated mmr: {{player.mmr_estimate.estimate}} </h3>
+  </div>
+</div>
+<div class="jumbotron bg-danger m-5" *ngIf="matches">
+  <form style="text-align: right" class="form-inline">
+    Matches per Page: 	&emsp;
+    <input name="entries_per_page" type="number" class="form-control" value="25"
+    [(ngModel)]="page.page_length"
+    (change)="setPages();"
+    >&emsp;
+    <button type="submit" class="btn btn-outline-dark"> Show </button>
+  </form>
+  <br>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th> Match no. </th>
+        <th> Game mode </th>
+        <th> Outcome </th>
+        <th> Hero </th>
+        <th> Time </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let x of matches | slice:(current_page - 1)*page.page_length:(current_page)*page.page_length; let i=index">
+          <!-- Link to game -->
+          <td> <a [routerLink]="['/matches', x.match_id]">{{x.match_id}} </a></td>
+          <td> {{game_modes[x.game_mode].local}} </td>
+          <!-- logic for victory or defeat -->
+          <td *ngIf="x.player_slot < 5 && x.radiant_win" class="text-success"> Victory </td>
+          <td *ngIf="x.player_slot  > 4 && !x.radiant_win" class="text-success"> Victory </td>
+          <td *ngIf="x.player_slot < 5 && !x.radiant_win" class="text-danger"> Defeat </td>
+          <td *ngIf="x.player_slot  > 4 && x.radiant_win" class="text-danger"> Defeat </td>
+
+          <td> <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{heroes[x.hero_id].name}}_sb.png"> {{heroes[x.hero_id].localized_name}} </td>
+          <td> {{x.match_length}} </td>
+        </tr>
+    </tbody>
+  </table>
+  <div class="text-center">
+    <button class="btn btn-outline-dark" *ngFor="let x of page_list" href="return:false" (click)="selectPage(x)">
+      {{x}}
+    </button>
+  </div>
+</div>
