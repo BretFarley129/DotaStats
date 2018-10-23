@@ -59,7 +59,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <div class="jumbotron bg-danger m-5">
     <h1> Dire <span *ngIf="!match_info.radiant_win"> - Winner </span> </h1>
       <table class="table table-dark">
@@ -115,14 +115,29 @@
         </tbody>
       </table>
   </div>
+
+  <div class="jumbotron bg-info m-5">
+    <h2> Chat </h2>
+    <p *ngFor="let x of chat_log">
+      [{{x.target}}] &emsp;
+      <strong *ngIf="players[x.slot].hero_info && !players[x.slot].personaname">{{players[x.slot].hero_info.localized_name}}:&emsp;</strong>
+      <strong *ngIf="players[x.slot].personaname">{{players[x.slot].personaname}}:&emsp;</strong>
+      {{x.message_val}} &emsp; &emsp; {{x.type}}
+    </p>
+  </div>
+
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Modals for player stats
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- check if ready -->
   <div *ngIf="match_info.objectives">
+    <!-- create 1 per player -->
     <div *ngFor="let x of this.players">
+      <!-- main modal -->
       <div class="modal" id="playerStats_{{x.player_slot}}">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
+            <!-- modal head -->
             <div class="modal-header">
               <h5 class="modal-title" *ngIf="x.personaname">{{x.personaname}}'s stats</h5>
               <h5 class="modal-title" *ngIf="!x.personaname">Anonomous' stats</h5>
@@ -130,165 +145,178 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            <!-- end modal head -->
+            <!-- modal body -->
             <div class="modal-body">
+              <!-- start tabs -->
               <ul class="nav nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link active show" data-toggle="tab" href="#actions">Actions</a>
+                  <a class="nav-link active show" data-toggle="tab" href="#actions_{{x.player_slot}}">Actions</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
+                  <a class="nav-link" data-toggle="tab" href="#chat_{{x.player_slot}}">Chat</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link disabled" href="#">Disabled</a>
                 </li>
               </ul>
-                <div id="myTabContent" class="tab-content">
-                  <div class="tab-pane fade active show" id="actions">
+              <!-- end tabs -->
+              <div id="myTabContent" class="tab-content">
+                <!-- player Action -->
+                <div class="tab-pane fade active show" id="actions_{{x.player_slot}}">
 
-                    <table class="table table-striped">
-                      <tr *ngIf="x.actions[1]">
-                        <td>Move to Position</td>
-                        <td>{{x.actions[1]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[2]">
-                        <td>Move to Target</td>
-                        <td>{{x.actions[2]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[3]">
-                        <td>Attack Move</td>
-                        <td>{{x.actions[3]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[4]">
-                        <td>Attack Target</td>
-                        <td>{{x.actions[4]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[5]">
-                        <td>Cast Position</td>
-                        <td>{{x.actions[5]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[6]">
-                        <td>Cast Target</td>
-                        <td>{{x.actions[6]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[7]">
-                        <td>Cast Target Tree</td>
-                        <td>{{x.actions[7]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[8]">
-                        <td>Cast No Target</td>
-                        <td>{{x.actions[8]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[9]">
-                        <td>Cast Toggle</td>
-                        <td>{{x.actions[9]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[10]">
-                        <td>Hold Position</td>
-                        <td>{{x.actions[10]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[11]">
-                        <td>Train Ability</td>
-                        <td>{{x.actions[11]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[12]">
-                        <td>Drop Item</td>
-                        <td>{{x.actions[12]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[13]">
-                        <td>Give Item</td>
-                        <td>{{x.actions[13]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[14]">
-                        <td>Pickup Item</td>
-                        <td>{{x.actions[14]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[15]">
-                        <td>Pickup Rune</td>
-                        <td>{{x.actions[15]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[16]">
-                        <td>Purchase Item</td>
-                        <td>{{x.actions[16]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[17]">
-                        <td>Sell Item</td>
-                        <td>{{x.actions[17]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[18]">
-                        <td>Disassemble Item</td>
-                        <td>{{x.actions[18]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[19]">
-                        <td>Move Item</td>
-                        <td>{{x.actions[19]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[20]">
-                        <td>Cast Auto Toggle</td>
-                        <td>{{x.actions[20]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[21]">
-                        <td>Stop</td>
-                        <td>{{x.actions[21]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[22]">
-                        <td>Taunt</td>
-                        <td>{{x.actions[22]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[23]">
-                        <td>Buyback</td>
-                        <td>{{x.actions[23]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[24]">
-                        <td>Glyph</td>
-                        <td>{{x.actions[24]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[25]">
-                        <td>Eject Item From Stash</td>
-                        <td>{{x.actions[25]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[26]">
-                        <td>Cast Rune</td>
-                        <td>{{x.actions[26]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[27]">
-                        <td>Ping Ability</td>
-                        <td>{{x.actions[27]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[28]">
-                        <td>Move to Direction</td>
-                        <td>{{x.actions[28]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[29]">
-                        <td>Order Patrol</td>
-                        <td>{{x.actions[29]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[30]">
-                        <td>Vector Target Position</td>
-                        <td>{{x.actions[30]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[31]">
-                        <td>Radar</td>
-                        <td>{{x.actions[31]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[32]">
-                        <td>Set Item Lock</td>
-                        <td>{{x.actions[32]}}</td>
-                      </tr>
-                      <tr *ngIf="x.actions[33]">
-                        <td>Continue</td>
-                        <td>{{x.actions[33]}}</td>
-                      </tr>
-                    </table>
+                  <table class="table table-striped">
+                    <tr *ngIf="x.actions[1]">
+                      <td>Move to Position</td>
+                      <td>{{x.actions[1]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[2]">
+                      <td>Move to Target</td>
+                      <td>{{x.actions[2]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[3]">
+                      <td>Attack Move</td>
+                      <td>{{x.actions[3]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[4]">
+                      <td>Attack Target</td>
+                      <td>{{x.actions[4]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[5]">
+                      <td>Cast Position</td>
+                      <td>{{x.actions[5]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[6]">
+                      <td>Cast Target</td>
+                      <td>{{x.actions[6]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[7]">
+                      <td>Cast Target Tree</td>
+                      <td>{{x.actions[7]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[8]">
+                      <td>Cast No Target</td>
+                      <td>{{x.actions[8]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[9]">
+                      <td>Cast Toggle</td>
+                      <td>{{x.actions[9]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[10]">
+                      <td>Hold Position</td>
+                      <td>{{x.actions[10]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[11]">
+                      <td>Train Ability</td>
+                      <td>{{x.actions[11]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[12]">
+                      <td>Drop Item</td>
+                      <td>{{x.actions[12]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[13]">
+                      <td>Give Item</td>
+                      <td>{{x.actions[13]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[14]">
+                      <td>Pickup Item</td>
+                      <td>{{x.actions[14]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[15]">
+                      <td>Pickup Rune</td>
+                      <td>{{x.actions[15]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[16]">
+                      <td>Purchase Item</td>
+                      <td>{{x.actions[16]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[17]">
+                      <td>Sell Item</td>
+                      <td>{{x.actions[17]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[18]">
+                      <td>Disassemble Item</td>
+                      <td>{{x.actions[18]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[19]">
+                      <td>Move Item</td>
+                      <td>{{x.actions[19]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[20]">
+                      <td>Cast Auto Toggle</td>
+                      <td>{{x.actions[20]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[21]">
+                      <td>Stop</td>
+                      <td>{{x.actions[21]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[22]">
+                      <td>Taunt</td>
+                      <td>{{x.actions[22]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[23]">
+                      <td>Buyback</td>
+                      <td>{{x.actions[23]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[24]">
+                      <td>Glyph</td>
+                      <td>{{x.actions[24]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[25]">
+                      <td>Eject Item From Stash</td>
+                      <td>{{x.actions[25]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[26]">
+                      <td>Cast Rune</td>
+                      <td>{{x.actions[26]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[27]">
+                      <td>Ping Ability</td>
+                      <td>{{x.actions[27]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[28]">
+                      <td>Move to Direction</td>
+                      <td>{{x.actions[28]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[29]">
+                      <td>Order Patrol</td>
+                      <td>{{x.actions[29]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[30]">
+                      <td>Vector Target Position</td>
+                      <td>{{x.actions[30]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[31]">
+                      <td>Radar</td>
+                      <td>{{x.actions[31]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[32]">
+                      <td>Set Item Lock</td>
+                      <td>{{x.actions[32]}}</td>
+                    </tr>
+                    <tr *ngIf="x.actions[33]">
+                      <td>Continue</td>
+                      <td>{{x.actions[33]}}</td>
+                    </tr>
+                  </table>
 
-                  </div>
-                  <div class="tab-pane fade" id="profile">
-                    <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-                  </div>
-                  
                 </div>
-            
-
+                <!-- end player actions -->
+                <!-- player chats -->
+                <div class="tab-pane fade" id="chat_{{x.player_slot}}">
+                  <div *ngFor="let c of x.chat">
+                    [{{c.target}}]: {{c.message_val}}
+                  </div>
+                  <div *ngIf="!x.chat[0]">
+                    No recordable chat uses
+                  </div>
+                </div>
+                <!-- end player chat -->
+                
+              </div>
+              <!-- end tabs content -->
             </div>
+            <!-- end modal body -->
             <div class="modal-footer">
               <button type="button" class="btn btn-primary">Save changes</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -296,6 +324,7 @@
           </div>
         </div>
       </div>
+      <!-- end modal template -->
     </div>
   </div>
 </div>

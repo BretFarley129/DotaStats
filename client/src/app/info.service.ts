@@ -23,4 +23,9 @@ export class InfoService {
     return this._http.post('getHeroes', arr)
   }
 
+  chatInfo(arr){
+    console.log('in service, attempting to grab chat')
+    return this._http.post('getChatwheels', arr)
+  }
+
 }

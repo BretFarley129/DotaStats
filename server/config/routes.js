@@ -1,5 +1,6 @@
 var abilities = require('../controllers/ability.js');
 var heroes = require('../controllers/hero.js');
+var chats = require('../controllers/chat.js');
 var path = require('path');
 
 module.exports = function(app){
@@ -16,6 +17,11 @@ module.exports = function(app){
     app.post('/getHeroes', (req, res, next)=>{
         console.log('hero route')
         heroes.getHeroNames(req, res)
+    })
+
+    app.post('/getChatwheels', (req, res, next)=>{
+        console.log('chat route')
+        chats.getChatwheelMessages(req, res)
     })
 
     // app.get('/aaa', (req, res, next) =>{
