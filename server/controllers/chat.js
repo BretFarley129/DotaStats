@@ -19,6 +19,24 @@ module.exports = {
                 chats[i].message_val = chats[i].key;
                 chats[i].target = 'all'
             }
+
+            // Change time from duration to timestamp
+            let negative = false;
+            if (chats[i].time < 0){
+                negative = true;
+                chats[i].time *= -1;
+            }
+            let minutes = Math.floor(chats[i].time / 60);
+            let seconds = chats[i].time % 60;
+            if (negative){
+                minutes *= -1;
+            }
+            if (seconds < 10){
+              chats[i].time = `${minutes}:0${seconds}`
+            }
+            else{
+              chats[i].time = `${minutes}:${seconds}`
+            }
         }
         console.log(chats);
         res.json(chats);

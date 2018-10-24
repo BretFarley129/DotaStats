@@ -182,11 +182,17 @@ export class MatchComponent implements OnInit {
         this.game_mode = this.game_modes[this.match_info.game_mode];
         this.chat_log = this.match_info.chat;
 
-        //retreive hero information
+        // Set various info for individual players
         let player_heroes = [];
         for (var i = 0; i < this.players.length; i ++){
           if (!this.players[i].personaname){
             this.players[i].personaname = false;
+          }
+          let total = this.players[i].kills + this.players[i].assists + this.players[i].deaths
+          this.players[i].percentages = {
+            kills: (this.players[i].kills / total)*100,
+            deaths: (this.players[i].deaths / total)*100,
+            assists: (this.players[i].assists / total)*100,
           }
           this.players[i].chat = [];
           player_heroes.push(this.players[i].hero_id)

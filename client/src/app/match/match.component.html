@@ -12,6 +12,7 @@
         <th scope="col">Hero</th>
         <th scope="col">Player</th>
         <th scope="col" *ngIf="game_mode.id == 18">Abilities</th>
+        <th scope="col"> K/D/A </th>
         <th scope="col">Taunts</th>
         <th scope="col">Other Stats</th>
       </thead>
@@ -44,6 +45,19 @@
             </ul>
           </td>
 
+          <td>
+            <p class="m-0">
+              <span class="text-success"> {{x.kills}} </span>/
+              <span class="text-danger"> {{x.deaths}} </span>/
+              <span class="text-info"> {{x.assists}} </span>
+            </p>
+            <div class="progress w-50" style="height: 7px">
+                <div id="kills_{{x.player_slot}}" class="progress-bar bg-success" role="progressbar" [style.width.%]="x.percentages.kills"></div>
+                <div id="deaths_{{x.player_slot}}"  class="progress-bar bg-danger" role="progressbar" [style.width.%]="x.percentages.deaths"></div>
+                <div id="assists_{{x.player_slot}}"  class="progress-bar bg-info" role="progressbar" [style.width.%]="x.percentages.assists"></div>
+            </div>
+          </td>
+
           <td *ngIf="match_info.objectives" color="red">
               <span *ngIf="x.actions[22]">{{x.actions[22]}}</span>
               <span *ngIf="!x.actions[22]">None</span>
@@ -67,6 +81,7 @@
           <th scope="col">Hero</th>
           <th scope="col">Player</th>
           <th scope="col" *ngIf="game_mode.id == 18">Abilities</th>
+          <th scope="col"> K/D/A </th>
           <th scope="col">Taunts</th>
           <th scope="col">Other Stats</th>
         </thead>
@@ -99,6 +114,19 @@
               </ul>
             </td>
 
+            <td>
+              <p class="m-0">
+                <span class="text-success"> {{x.kills}} </span>/
+                <span class="text-danger"> {{x.deaths}} </span>/
+                <span class="text-info"> {{x.assists}} </span>
+              </p>
+              <div class="progress w-50" style="height: 7px">
+                  <div id="kills_{{x.player_slot}}" class="progress-bar bg-success" role="progressbar" [style.width.%]="x.percentages.kills"></div>
+                  <div id="deaths_{{x.player_slot}}"  class="progress-bar bg-danger" role="progressbar" [style.width.%]="x.percentages.deaths"></div>
+                  <div id="assists_{{x.player_slot}}"  class="progress-bar bg-info" role="progressbar" [style.width.%]="x.percentages.assists"></div>
+              </div>
+            </td>
+
             <td *ngIf="match_info.objectives" color="red">
               <span *ngIf="x.actions[22]">{{x.actions[22]}}</span>
               <span *ngIf="!x.actions[22]">None</span>
@@ -119,9 +147,10 @@
   <div class="jumbotron bg-info m-5">
     <h2> Chat </h2>
     <p *ngFor="let x of chat_log">
-      [{{x.target}}] &emsp;
+      {{x.time}}[{{x.target}}] &emsp;
       <strong *ngIf="players[x.slot].hero_info && !players[x.slot].personaname">{{players[x.slot].hero_info.localized_name}}:&emsp;</strong>
       <strong *ngIf="players[x.slot].personaname">{{players[x.slot].personaname}}:&emsp;</strong>
+      <strong *ngIf="x.type == 'chatwheel'||'hero_chatwheel'">&#x2023;</strong>
       {{x.message_val}} &emsp; &emsp; {{x.type}}
     </p>
   </div>
