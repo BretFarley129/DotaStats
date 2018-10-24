@@ -29,6 +29,7 @@
         <th> Game mode </th>
         <th> Outcome </th>
         <th> Hero </th>
+        <th> K/D/A </th>
         <th> Time </th>
       </tr>
     </thead>
@@ -44,6 +45,18 @@
           <td *ngIf="x.player_slot  > 4 && x.radiant_win" class="text-danger"> Defeat </td>
 
           <td> <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{heroes[x.hero_id].name}}_sb.png"> {{heroes[x.hero_id].localized_name}} </td>
+          <td>
+            <p class="m-0">
+              <span class="text-success"> {{x.kills}} </span>/
+              <span class="text-danger"> {{x.deaths}} </span>/
+              <span class="text-info"> {{x.assists}} </span>
+            </p>
+            <div class="progress w-50" style="height: 7px">
+                <div class="progress-bar bg-success" role="progressbar" [style.width.%]="(x.kills / x.kills + x.deaths + x.assists)*100"></div>
+                <div class="progress-bar bg-danger" role="progressbar" [style.width.%]="(x.deaths / x.kills + x.deaths + x.assists)*100"></div>
+                <div class="progress-bar bg-info" role="progressbar" [style.width.%]="(x.assists / x.kills + x.deaths + x.assists)*100"></div>
+            </div>
+          </td>
           <td> {{x.match_length}} </td>
         </tr>
     </tbody>

@@ -15,6 +15,7 @@ export class UserComponent implements OnInit {
   player;
   profile;
   matches;
+  all_matches;
   record = {win: 0, lose: 0, percent: ''};
   current_page = 1;
   page = {
@@ -310,6 +311,7 @@ export class UserComponent implements OnInit {
     this._matchService.getPlayerMatches(this.player_id).subscribe(
       (response) => {
         this.matches = response.json();
+        this.all_matches = response.json();
         console.log({info: 'matches', data: this.matches})
         this.setTimes();
         this.setPages();

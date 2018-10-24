@@ -195,6 +195,10 @@
                 <div class="tab-pane fade active show" id="actions_{{x.player_slot}}">
 
                   <table class="table table-striped">
+                    <!-- <tr *ngFor="let A of x.actions">
+                      <td></td>
+                      <td> {{x.actions[1]}} </td>
+                    </tr> -->
                     <tr *ngIf="x.actions[1]">
                       <td>Move to Position</td>
                       <td>{{x.actions[1]}}</td>

@@ -16,8 +16,19 @@
         <a class="nav-link" href="#">Pricing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
+          <!-- <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> -->
       </li>
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Icons
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="http://www.freepik.com">made by Freepik</a>
+            <a class="dropdown-item" href="https://www.flaticon.com/">From www.flaticon.com</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="http://creativecommons.org/licenses/by/3.0/">Licenced By CC 3.0 BY</a>
+          </div>
+        </li>
     </ul>
     <form class="form-inline my-2 my-lg-0" (submit)="findMatch()">
       <input class="form-control mr-sm-2" type="text" placeholder="Match ID" name="value" [(ngModel)]="number.value" #author = "ngModel">
