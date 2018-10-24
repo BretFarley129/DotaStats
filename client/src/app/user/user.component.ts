@@ -368,5 +368,15 @@ export class UserComponent implements OnInit {
   selectPage(page_number){
     this.current_page = page_number;
   }
+
+  filterGameMode(mode_id){
+    let temp_arr = []
+    for(let i = 0; i < this.all_matches.length; i++){
+      if (this.all_matches[i].game_mode == mode_id){
+        temp_arr.push(this.all_matches[i]);
+      }
+    }
+    this.matches = temp_arr;
+  }
   
 }
