@@ -11,7 +11,7 @@ var path = require('path');
 
 
 //-----BE SURE TO CHANGE THE DB NAME-----//
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost/DATABASE', {useMongoClient: true});
 // Use native promises
 // mongoose.Promise = global.Promise;
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, './client/dist')));
 app.set('view engine', 'ejs');
 
 
-require('./server/config/mongoose.js');
+// require('./server/config/mongoose.js');
 
 var router = require('./server/config/routes.js');
 

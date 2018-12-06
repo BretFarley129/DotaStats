@@ -20,7 +20,7 @@ export class MatchComponent implements OnInit {
   match_info ={radiant_win: null, players: null, duration: null, game_mode: '', chat: []};
   players = [];
   radiant = [];
-  chat_log;
+  chat_log = [];
   dire = [];
   played_heroes = [];
   game_mode;
@@ -213,10 +213,15 @@ export class MatchComponent implements OnInit {
     this._matchService.getMatchData(this.match_id).subscribe(
       (response) => {
         this.match_info = response.json();
-        console.log({match_deets: this.match_info});
+        // console.log({match_deets: this.match_info});
         this.players = this.match_info.players;
         this.game_mode = this.game_modes[this.match_info.game_mode];
-        this.chat_log = this.match_info.chat;
+        // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        // console.log(this.match_info.chat)
+        // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        if( this.match_info.chat){
+          this.chat_log = this.match_info.chat;
+        }
 
         // Set various info for individual players
         let player_heroes = [];
@@ -235,10 +240,10 @@ export class MatchComponent implements OnInit {
         }
         this._infoService.chatInfo(this.chat_log).subscribe(
           (data)=>{
-            console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`)
+            // console.log(`~~~~~~~~~~~~~~~~~~~~~ Chat Log ~~~~~~~~~~~~~~~~~~~~~~`)
             this.chat_log = data.json();
-            console.log(this.chat_log)
-            console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`)
+            // console.log(this.chat_log)
+            // console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`)
             // Assign individual chats
             for (let i = 0; i < this.chat_log.length; i ++){
               let said_by_index = this.chat_log[i].slot;
@@ -252,7 +257,7 @@ export class MatchComponent implements OnInit {
         ); // End Chat subscription
         this._infoService.heroInfo(player_heroes).subscribe(
           (data)=>{
-            console.log(data.json());
+            // console.log(data.json());
             let heroes_info = data.json();
             for (let i = 0; i < this.players.length; i++){
               this.players[i].hero_info = heroes_info[i]
@@ -270,12 +275,12 @@ export class MatchComponent implements OnInit {
           for (let i = 0; i < this.players.length; i++){ 
             ability_log.push(this.players[i].ability_upgrades_arr)
           }
-          console.log(ability_log);
+          // console.log(ability_log);
           // Request ability names from backend
           this._infoService.abilityNames(ability_log).subscribe(
             (data)=>{
-              console.log('retrieved ability names')
-              console.log(data.json())
+              // console.log('retrieved ability names')
+              // console.log(data.json())
               ability_log = data.json();
               for ( let i = 0; i < ability_log.length; i ++){
                 this.players[i].abilities = ability_log[i];
@@ -292,9 +297,9 @@ export class MatchComponent implements OnInit {
         this.radiant = this.players.slice(0, 5);
         this.dire = this.players.slice(5);
         
-        console.log({radiant: this.radiant});
-        console.log({dire: this.dire});
-        console.log(this.game_mode)
+        // console.log({radiant: this.radiant});
+        // console.log({dire: this.dire});
+        // console.log(this.game_mode)
         // SET TIME FOR MATCH
         let minutes = Math.floor(this.match_info.duration / 60);
         let seconds = this.match_info.duration % 60;
