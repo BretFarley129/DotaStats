@@ -194,7 +194,7 @@
                 <!-- player Action -->
                 <div class="tab-pane fade active show" id="actions_{{x.player_slot}}">
 
-                  <table class="table table-striped">
+                  <table class="table table-striped" *ngIf="x.actions">
                     <!-- <tr *ngFor="let A of x.actions">
                       <td></td>
                       <td> {{x.actions[1]}} </td>
@@ -332,17 +332,21 @@
                       <td>{{x.actions[33]}}</td>
                     </tr>
                   </table>
+                  <h3 *ngIf="!x.actions"> Actions are not available for this match </h3>
 
                 </div>
                 <!-- end player actions -->
                 <!-- player chats -->
                 <div class="tab-pane fade" id="chat_{{x.player_slot}}">
-                  <div *ngFor="let c of x.chat">
-                    [{{c.target}}]: {{c.message_val}}
+                  <div *ngIf="x.chat">
+                    <div *ngFor="let c of x.chat">
+                      [{{c.target}}]: {{c.message_val}}
+                    </div>
+                    <div *ngIf="!x.chat[0]">
+                      No recordable chat uses
+                    </div>
                   </div>
-                  <div *ngIf="!x.chat[0]">
-                    No recordable chat uses
-                  </div>
+                  <h3 *ngIf="!x.chat">Chat information is not available</h3>
                 </div>
                 <!-- end player chat -->
                 
@@ -351,7 +355,7 @@
             </div>
             <!-- end modal body -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>

@@ -213,7 +213,7 @@ export class MatchComponent implements OnInit {
     this._matchService.getMatchData(this.match_id).subscribe(
       (response) => {
         this.match_info = response.json();
-        // console.log({match_deets: this.match_info});
+        console.log({match_deets: this.match_info});
         this.players = this.match_info.players;
         this.game_mode = this.game_modes[this.match_info.game_mode];
         // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
